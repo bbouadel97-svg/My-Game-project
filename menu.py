@@ -24,6 +24,7 @@ def Utilisateur():
         print("Option invalide. Veuillez choisir une option valide.")
         return
     return choix_utilisateur, nom_utilisateur
+    
 def Reponse():
     reponse = input("Voulez-vous continuer ? (oui/non) ").strip().lower()
     if reponse != "oui":

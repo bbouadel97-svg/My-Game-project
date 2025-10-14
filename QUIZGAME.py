@@ -23,14 +23,13 @@ def main():
 
 
 
-
     
     #TODO gerer la progression et sauvegarde de partie dans un game session // apres 
     #TODO gerer la sauvegarde du nom d'utilisateur et le demander aprés chaque partie // apres 
     #TODO charger les questions depuis le base de données script // c fait
     #TODO boucler sur 20 questions la categorie choisie par utilisateur // c fait
-    #TODO ajouter une fonction pour le score 
-    #TODO ajouter une partie ou sauvegarde le score et l'afficher aprés chaque fin de theme //
+    #TODO ajouter une fonction pour le score // c fait 
+    #TODO ajouter une partie ou sauvegarde le score et l'afficher aprés chaque fin de theme // c fait
    
     # Exemple de question
 
