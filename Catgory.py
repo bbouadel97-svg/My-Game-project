@@ -9,7 +9,7 @@ def Category():
     }
     print("Choix de catégories :")
     for numero, nom in categorie.items():
-        print(f"{numero} : {nom}")
+        print(f"{numero} : {nom}") 
     while True:
         choix = input("Choisis une catégorie : ").strip().upper()
         if choix in categorie:

@@ -1,10 +1,5 @@
-from tkinter.messagebox import QUESTION
-
 
 def Quiz_algo():
-
-   
-
    question = {
     1:["Qu’est-ce qu’un algorithme ?", "Une suite d’instructions permettant de résoudre un problème ou d’accomplir une tâche."],
     2:["Quelle structure de contrôle permet de répéter des instructions ?", "Une boucle (for, while)."],
@@ -29,14 +24,20 @@ def Quiz_algo():
     } 
    return question
 
-def lancer_quizalgo():
+def lancer_quizalgo(score: int) -> int:
     questions = Quiz_algo()  # Doit retourner un dictionnaire {num: [question, réponse]}
-
+    print(f"Votre score actuel : {str(score)}")
     for num, question in questions.items():
         print (f"{num} : {question[0]}")
         reponse = input("Votre reponse: ")
         if reponse.lower() == question[1].lower():
             print(" Bonne réponse")
+            score += 1
         else:
             print(f" Perdu ! La bonne réponse était : {question[1]}")
+    print(f"\n🎯 Score final : {score}/{len(questions)}")
+    return score
+    
+
+
 
