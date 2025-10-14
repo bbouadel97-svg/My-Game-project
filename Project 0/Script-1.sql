@@ -6,8 +6,8 @@ CREATE TABLE quiz_algo (
 );
 
 INSERT INTO quiz_algo (question, answer) VALUES
-('Qu’est-ce qu’un algorithme ?', 'Une suite d’instructions permettant de résoudre un problème ou d’accomplir une tâche.'),
-('Quelle structure de contrôle permet de répéter des instructions ?', 'Une boucle (for, while).'),
+["Qu’est-ce qu’un algorithme ?","Une suite d’instructions permettant de résoudre un problème ou d’accomplir une tâche."],
+["Quelle structure de contrôle permet de répéter des instructions ?","Une boucle (for, while)."],
 ('Quelle est la différence entre un algorithme itératif et récursif ?', 'L’itératif utilise des boucles, le récursif s’appelle lui-même.'),
 ('Qu’est-ce qu’une variable dans un algorithme ?', 'Un espace de stockage pour une valeur qui peut changer.'),
 ('Qu’est-ce qu’une condition dans un algorithme ?', 'Une expression qui permet de décider quel chemin suivre.'),

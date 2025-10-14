@@ -4,21 +4,23 @@ from menu import afficher_menu
 from menu import Utilisateur
 from menu import Reponse
 from Catgory import Category
-from Algo import Quiz_algo
+from Algo import lancer_quizalgo
 
-
-afficher_menu()
-Utilisateur()
-Reponse()
-Category()
-Quiz_algo()
-
-
-import sqlite3
 
 def main():
-    print("Game start!")
-    
+    afficher_menu()
+    Utilisateur()
+    Reponse()
+    continuer_jeu = True
+    while continuer_jeu : 
+        Category()
+        lancer_quizalgo()
+        print("Voulez vous continuer de jouer? Oui ou Non")
+        choix = input()
+        continuer_jeu = choix.lower() == "oui"
+
+
+ 
     
     #TODO gerer la progression et sauvegarde de partie dans un game session // apres 
     #TODO gerer la sauvegarde du nom d'utilisateur et le demander aprés chaque partie // apres 
