@@ -11,4 +11,5 @@ class Session :
         self.player = player_name
         self.themes = themes
         self.succed_themes = []
+
         

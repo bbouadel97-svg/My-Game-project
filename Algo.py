@@ -24,8 +24,37 @@ def Quiz_algo():
     } 
    return question
 
-def lancer_quizalgo(score: int) -> int:
-    questions = Quiz_algo()  # Doit retourner un dictionnaire {num: [question, réponse]}
+from pathlib import Path
+from questions_service import load_questions_from_sql
+
+
+def lancer_quizalgo(score: int, categorie: str = None) -> int:
+    """Lance le quiz pour la catégorie donnée.
+
+    categorie: clé de catégorie telle que renvoyée par `Category()` (ex: '1', '2', ...).
+    Si categorie est None ou inconnue, toutes les questions par défaut sont utilisées.
+    Retourne le nouveau score (int).
+    """
+    # Charger les questions depuis le script SQL et sélectionner la table
+    sql_path = Path(__file__).parent / 'Project 0' / 'Script-1.sql'
+    tables = load_questions_from_sql(sql_path)
+
+    category_table_map = {
+        '1': 'quiz_algo',
+        '2': 'quiz_metiers',
+        '3': 'quiz_logique',
+        '4': 'quiz_culture',
+        '5': 'quiz_anglais',
+    }
+
+    table_name = category_table_map.get(categorie, 'quiz_algo')
+    items = tables.get(table_name)
+    if not items:
+        print(f"Aucune question trouvée pour la catégorie {categorie} ({table_name}), utilisation du jeu par défaut.")
+        items = tables.get('quiz_algo', [])
+
+    # Convertir la liste en dictionnaire indexé 1..n similaire à Quiz_algo()
+    questions = {i + 1: [q, a] for i, (q, a) in enumerate(items)}
     print(f"Votre score actuel : {str(score)}")
     for num, question in questions.items():
         print (f"{num} : {question[0]}")
@@ -37,7 +66,3 @@ def lancer_quizalgo(score: int) -> int:
             print(f" Perdu ! La bonne réponse était : {question[1]}")
     print(f"\n🎯 Score final : {score}/{len(questions)}")
     return score
-    
-
-
-

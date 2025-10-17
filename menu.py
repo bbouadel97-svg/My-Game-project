@@ -26,7 +26,13 @@ def Utilisateur():
     return choix_utilisateur, nom_utilisateur
     
 def Reponse():
-    reponse = input("Voulez-vous continuer ? (oui/non) ").strip().lower()
-    if reponse != "oui":
-        print("A vos marques !")
-        return
+    reponse = input("Es-tu prêt à commencer ? Oui ou Non ").strip().lower()
+    if reponse == "oui":
+        print("Super! Commençons le jeu.")
+    elif reponse == "non":
+        print("D'accord, à la prochaine!")
+        exit()
+    else:
+        print("Réponse invalide. Veuillez répondre par 'Oui' ou 'Non'.")
+        return Reponse()        
+    return reponse
