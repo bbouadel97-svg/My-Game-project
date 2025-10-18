@@ -70,7 +70,9 @@ def run():
             if choix in ('oui', 'non'):
                 break
             print("Réponse invalide — tape 'oui' ou 'non'.")
-        continuer_jeu = choix == "oui"
+        continuer_jeu = (choix == "oui")
+#donner le choix des categories mais en suppressant les categories deja jouees
+     
 
     print(f"Merci d'avoir joué, {nom_utilisateur} ! Score final : {score}.")
 
