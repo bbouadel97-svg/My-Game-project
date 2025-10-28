@@ -1,12 +1,15 @@
 from menu import afficher_menu, Utilisateur, Reponse
 from Catgory import Category
 from Algo import lancer_quizalgo
+from Sauvegarde import charger_progression, sauvegarder_progression 
 
 
 def run():
     afficher_menu()
     Utilisateur()
     Reponse()
+    sauvegarder_progression()
+    charger_progression()
     score = 0
     continuer_jeu = True
     played = set()

@@ -2,7 +2,8 @@
 CHOIX = {
     "PLAY": 1,
     "SAVE": 2,
-    "RESTART": 3
+    "RESTART": 3,
+    "Partie sauvegardée": 4
 }
 
 

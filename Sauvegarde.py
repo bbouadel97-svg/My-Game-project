@@ -1,5 +1,6 @@
 import json
 
+
 def sauvegarder_partie(etat, fichier="sauvegarde.json"):
     with open(fichier, "w", encoding="utf-8") as f:
         json.dump(etat, f, indent=4) 
@@ -147,4 +148,5 @@ def afficher_leaderboard_db(top_n: int = 10, db_path: str = None):
     from datetime import datetime
     for i, entry in enumerate(rows, start=1):
         dt = datetime.fromtimestamp(entry.get('timestamp', 0)).strftime('%Y-%m-%d %H:%M:%S') if entry.get('timestamp') else 'N/A'
-        print(f"{i}. {entry.get('nom')} — {entry.get('score')} pts — cat {entry.get('categorie')} — {dt}")
+        print(f"{i}. {entry.get('nom')} — {entry.get('score')} pts — cat {entry.get('categorie')} — {dt}")          
+    

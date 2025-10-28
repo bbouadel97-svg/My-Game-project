@@ -71,10 +71,7 @@ def run():
                 break
             print("Réponse invalide — tape 'oui' ou 'non'.")
         continuer_jeu = (choix == "oui")
-#donner le choix des categories mais en suppressant les categories deja jouees
-     
-
-    print(f"Merci d'avoir joué, {nom_utilisateur} ! Score final : {score}.")
+#fonction pour reprendre une partie sauvegardée
 
     # Afficher leaderboard final si demandé
     if input("Voulez-vous voir le leaderboard final ? (oui/non) \n").strip().lower() == 'oui':
@@ -82,6 +79,8 @@ def run():
         afficher_leaderboard_db()
         print("\nLeaderboard (JSON):")
         afficher_leaderboard()
+#montrer le score final et le nom du joueur
+    print(f"Votre score final est de {score}, {nom_utilisateur}.")
 
 
 if __name__ == "__main__":
