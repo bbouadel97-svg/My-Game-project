@@ -11,10 +11,10 @@ from Sauvegarde import (
 
 
 
+
 def demander_categorie() -> str:
     """Demande au joueur de choisir une catégorie et retourne la clé choisie."""
     return Category()
-
 
 def jouer_categorie(score: int, categorie: str) -> int:
     """Lance le quiz pour la catégorie fournie et renvoie le score mis à jour."""
@@ -63,6 +63,7 @@ def run():
                 sauvegarder_score_db(nom_utilisateur, score, categorie)
         except Exception as e:
             print("Impossible de sauvegarder le score:", e)
+
 
         # Demander si on continue
         while True:

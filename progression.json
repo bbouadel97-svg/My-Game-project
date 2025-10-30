@@ -1,0 +1,16 @@
+{
+    "nom": "Othmane3",
+    "score": 21,
+    "categories_jouees": [
+        "5"
+    ],
+    "bosses_defeated": {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+    },
+    "final_unlocked": false,
+    "timestamp": 1761817741
+}

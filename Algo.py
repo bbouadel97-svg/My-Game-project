@@ -65,4 +65,23 @@ def lancer_quizalgo(score: int, categorie: str = None) -> int:
         else:
             print(f" Perdu ! La bonne réponse était : {question[1]}")
     print(f"\n🎯 Score final : {score}/{len(questions)}")
+    # retourner le score pour l'appelant
+    return score
+
+
+# (Optionnel) helper pour débloquer/affronter des bosses par thème
+def boss_themes(played, score=0):
+    """Parcours un fichier boss_themes.txt et lance les bosses non joués.
+    Retourne le score mis à jour.
+    """
+    try:
+        with open("boss_themes.txt", "r", encoding="utf-8") as f:
+            boss_list = f.read().splitlines()
+    except FileNotFoundError:
+        boss_list = []
+    for boss in boss_list:
+        if boss not in played:
+            print(f"Vous avez débloqué le boss du thème {boss} ! Préparez-vous pour un défi supplémentaire.")
+            score = lancer_quizalgo(score, boss)
+            played.add(boss)
     return score

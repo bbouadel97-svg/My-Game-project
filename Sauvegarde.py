@@ -1,17 +1,66 @@
 import json
+import time
+from datetime import datetime
+import sqlite3
+from pathlib import Path
 
 
 def sauvegarder_partie(etat, fichier="sauvegarde.json"):
     with open(fichier, "w", encoding="utf-8") as f:
-        json.dump(etat, f, indent=4) 
+        json.dump(etat, f, indent=4)
 
-def charger_progression(fichier="progression.json"):
+
+def sauvegarder_progression(nom: str, score: int, categories_jouees: list, bosses_defeated: dict = None, final_unlocked: bool = False, fichier: str = "progression.json"):
+    """Sauvegarde l'état courant d'une campagne.
+
+    - nom: nom du joueur
+    - score: score actuel
+    - categories_jouees: iterable des clés de catégories jouées
+    - bosses_defeated: dict mapping key->bool indiquant si boss a été vaincu
+    - final_unlocked: bool indiquant si le boss final est débloqué
+    """
+    if bosses_defeated is None:
+        bosses_defeated = {}
+    etat = {
+        "nom": nom,
+        "score": score,
+        "categories_jouees": list(categories_jouees),
+        "bosses_defeated": bosses_defeated,
+        "final_unlocked": bool(final_unlocked),
+        "timestamp": int(time.time()),
+    }
+    with open(fichier, "w", encoding="utf-8") as f:
+        json.dump(etat, f, ensure_ascii=False, indent=4)
+    print(f"Progression sauvegardée pour {nom} (score: {score})")
+
+
+def charger_progression(fichier: str = "progression.json") -> dict:
+    """Charge la progression d'une campagne. Retourne None si pas de sauvegarde valide."""
     try:
         with open(fichier, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        print("Aucune sauvegarde trouvée. Nouvelle partie.")
-        return None 
+            etat = json.load(f)
+            if not isinstance(etat, dict):
+                return None
+            # Normalize fields and provide defaults
+            etat.setdefault("score", 0)
+            etat.setdefault("nom", "Anonyme")
+            etat.setdefault("categories_jouees", [])
+            etat.setdefault("bosses_defeated", {})
+            etat.setdefault("final_unlocked", False)
+            # Convert categories_jouees to a set for caller convenience
+            etat["categories_jouees"] = set(str(c) for c in etat.get("categories_jouees", []))
+            # Ensure bosses_defeated keys are strings
+            etat["bosses_defeated"] = {str(k): bool(v) for k, v in etat.get("bosses_defeated", {}).items()}
+            ts = etat.get("timestamp")
+            if ts:
+                dt = datetime.fromtimestamp(ts)
+                print(f"Partie trouvée pour {etat['nom']} du {dt:%Y-%m-%d %H:%M}")
+            else:
+                print(f"Partie trouvée pour {etat['nom']}")
+            return etat
+    except (FileNotFoundError, json.JSONDecodeError):
+        print("Aucune partie sauvegardée trouvée.")
+        return None
 
 
 def sauvegarder_score(nom: str, score: int, categorie: str, fichier: str = "sauvegarde.json"):
@@ -149,4 +198,3 @@ def afficher_leaderboard_db(top_n: int = 10, db_path: str = None):
     for i, entry in enumerate(rows, start=1):
         dt = datetime.fromtimestamp(entry.get('timestamp', 0)).strftime('%Y-%m-%d %H:%M:%S') if entry.get('timestamp') else 'N/A'
         print(f"{i}. {entry.get('nom')} — {entry.get('score')} pts — cat {entry.get('categorie')} — {dt}")          
-    
