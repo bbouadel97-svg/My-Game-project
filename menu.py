@@ -9,7 +9,8 @@ CHOIX = {
 
 def afficher_choix(choix):
     for nom, valeur in choix.items():
-        print(f"{nom} : {valeur}") 
+        # Affiche le numéro en premier pour que l'utilisateur puisse entrer le chiffre
+        print(f"{valeur} : {nom}") 
 def afficher_menu():
     print("Hello to your game!")
     print("Instructions : Choisissez une option du menu.")
@@ -22,14 +23,25 @@ def Sauvegarder_partie_en_cours():
     print(f"Partie sauvegardée dans le fichier : {nom_fichier}")
 
 def Utilisateur():
-    choix_utilisateur = input("Quel est ton choix ? ").strip().upper()
-    nom_utilisateur = input("Quel est ton prénom ? ").strip()
-    if choix_utilisateur in CHOIX:
-        print(f"Tu as choisi l'option {choix_utilisateur}.")
-    else:
-        print("Option invalide. Veuillez choisir une option valide.")
-        return
-    return choix_utilisateur, nom_utilisateur
+    # Demander le choix sous forme de numéro (ex: 1, 2, ...)
+    while True:
+        choix_str = input("Entrez le numéro de votre choix : ").strip()
+        if not choix_str.isdigit():
+            print("Veuillez entrer un numéro valide correspondant à une option.")
+            continue
+        choix_num = int(choix_str)
+        # Trouver la clé correspondant au numéro
+        selection = None
+        for nom, valeur in CHOIX.items():
+            if valeur == choix_num:
+                selection = nom
+                break
+        if selection is None:
+            print("Option inconnue. Réessayez.")
+            continue
+        nom_utilisateur = input("Quel est ton prénom ? ").strip()
+        print(f"Tu as choisi l'option {selection} ({choix_num}).")
+        return choix_num, nom_utilisateur
     
 def Reponse():
     reponse = input("Es-tu prêt à commencer ? Oui ou Non ").strip().lower()

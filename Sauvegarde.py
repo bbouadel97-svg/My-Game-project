@@ -10,7 +10,7 @@ def sauvegarder_partie(etat, fichier="sauvegarde.json"):
         json.dump(etat, f, indent=4)
 
 
-def sauvegarder_progression(nom: str, score: int, categories_jouees: list, bosses_defeated: dict = None, final_unlocked: bool = False, fichier: str = "progression.json"):
+def sauvegarder_progression(nom: str, score: int, categories_jouees: list, bosses_defeated: dict = None, final_unlocked: bool = False, last_boss_questions: list = None, fichier: str = "progression.json"):
     """Sauvegarde l'état courant d'une campagne.
 
     - nom: nom du joueur
@@ -27,6 +27,7 @@ def sauvegarder_progression(nom: str, score: int, categories_jouees: list, bosse
         "categories_jouees": list(categories_jouees),
         "bosses_defeated": bosses_defeated,
         "final_unlocked": bool(final_unlocked),
+        "last_boss_questions": last_boss_questions,
         "timestamp": int(time.time()),
     }
     with open(fichier, "w", encoding="utf-8") as f:

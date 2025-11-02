@@ -21,8 +21,8 @@ def build_boss_for_category(cat_key: str, sql_path: Path | str = "Project 0/Scri
     tables = load_questions_from_sql(Path(sql_path))
     table_name = CAT_TABLE.get(str(cat_key))
     qlist = tables.get(table_name, []) if table_name else []
-    # Boss: 7 questions, need 5 correct to win
-    return Boss(cat_key, table_name or f"Cat {cat_key}", qlist, n_questions=7, win_required=5)
+    # Boss: 1 question per category (simple boss). Win if answer correct (1/1).
+    return Boss(cat_key, table_name or f"Cat {cat_key}", qlist, n_questions=1, win_required=1, scoring=(10, -5))
 
 
 def run():
@@ -97,7 +97,7 @@ def run():
         # After finishing trials in that category, face the boss (if not yet defeated)
         if not bosses_defeated.get(str(categorie), False):
             boss = build_boss_for_category(categorie, sql_path)
-            won, score = boss.fight(starting_score=score)
+            won, score, last_boss_q = boss.fight(starting_score=score)
             if won:
                 bosses_defeated[str(categorie)] = True
                 print(f"Boss {categorie} vaincu !")
@@ -109,8 +109,12 @@ def run():
             final_unlocked = True
             print("Tous les bosses vaincus — le Clavier d'Or est débloqué !")
 
-        # Save progression after each category/boss
-        sauvegarder_progression(nom_utilisateur, score, played, bosses_defeated, final_unlocked)
+        # Save progression after each category/boss (include last boss question asked)
+        try:
+            sauvegarder_progression(nom_utilisateur, score, played, bosses_defeated, final_unlocked, last_boss_questions=last_boss_q)
+        except Exception:
+            # fallback: save without last question if something goes wrong
+            sauvegarder_progression(nom_utilisateur, score, played, bosses_defeated, final_unlocked)
 
         # Continue?
         choix = input("Voulez-vous continuer la campagne ? (oui/non) \n").strip().lower()
