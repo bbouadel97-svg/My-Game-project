@@ -2,9 +2,6 @@
 CHOIX = {
 <<<<<<< HEAD
     "PLAY": 1, 
-=======
-    "PLAY": 1,
->>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
     "SAVE": 2,
     "RESTART": 3,
     "Partie sauvegardée": 4

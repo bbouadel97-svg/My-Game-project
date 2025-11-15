@@ -36,9 +36,6 @@ def Category(played=None):
      ┗━╸╹ ╹┗━┛╹╹ ╹   ╺┻┛┗━╸┗━┛   ┗━╸╹ ╹ ╹ ┗━╸┗━┛┗━┛╹┗╸╹┗━╸┗━┛   ╹                                                           
                                                                                                                                                                
                                                             """)
-=======
-    print("Choix de catégories :")
->>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
     for numero, nom in remaining.items():
         print(f"{numero} : {nom}")
 
