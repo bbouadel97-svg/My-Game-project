@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
 def Category(played=None):
     """Affiche les catégories disponibles et demande un choix.
 
@@ -25,6 +28,7 @@ def Category(played=None):
         print("Aucune catégorie restante. Merci d'avoir joué !")
         return None
 
+<<<<<<< HEAD
     print("""
           
      ┏━╸╻ ╻┏━┓╻╻ ╻   ╺┳┓┏━╸┏━┓   ┏━╸┏━┓╺┳╸┏━╸┏━╸┏━┓┏━┓╻┏━╸┏━┓    
@@ -32,6 +36,9 @@ def Category(played=None):
      ┗━╸╹ ╹┗━┛╹╹ ╹   ╺┻┛┗━╸┗━┛   ┗━╸╹ ╹ ╹ ┗━╸┗━┛┗━┛╹┗╸╹┗━╸┗━┛   ╹                                                           
                                                                                                                                                                
                                                             """)
+=======
+    print("Choix de catégories :")
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
     for numero, nom in remaining.items():
         print(f"{numero} : {nom}")
 
@@ -42,4 +49,7 @@ def Category(played=None):
             return choix
         else:
             print("Catégorie invalide ou déjà jouée. Réessaie.")
+<<<<<<< HEAD
 Category()
+=======
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92

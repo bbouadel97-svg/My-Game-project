@@ -1,8 +1,14 @@
+<<<<<<< HEAD
 import sqlite3
 import csv
 from pathlib import Path
 from typing import Dict, List, Tuple
 import re
+=======
+import re
+from pathlib import Path
+from typing import Dict, List, Tuple
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
 
 
 def load_questions_from_sql(sql_path: Path) -> Dict[str, List[Tuple[str, str]]]:
@@ -40,6 +46,7 @@ def load_questions_from_sql(sql_path: Path) -> Dict[str, List[Tuple[str, str]]]:
 	return result
 
 
+<<<<<<< HEAD
 def load_boss_questions(csv_path: Path | str = "boss_questions.csv") -> List[Tuple[str, str, str]]:
     """Charge les questions BOSS depuis le fichier CSV.
     
@@ -118,3 +125,14 @@ if __name__ == "__main__":
             print(f"R: {q[1]}")
     except Exception as e:
         print("Erreur lors du chargement des questions:", e)
+=======
+if __name__ == "__main__":
+	# Test rapide si on exécute le module directement
+	sql = Path(__file__).parent / 'Project 0' / 'Script-1.sql'
+	try:
+		data = load_questions_from_sql(sql)
+		for table, items in data.items():
+			print(f"{table}: {len(items)} questions")
+	except Exception as e:
+		print("Erreur lors du chargement des questions:", e)
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92

@@ -1,6 +1,10 @@
 
 CHOIX = {
+<<<<<<< HEAD
     "PLAY": 1, 
+=======
+    "PLAY": 1,
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
     "SAVE": 2,
     "RESTART": 3,
     "Partie sauvegardée": 4
@@ -12,6 +16,7 @@ def afficher_choix(choix):
         # Affiche le numéro en premier pour que l'utilisateur puisse entrer le chiffre
         print(f"{valeur} : {nom}") 
 def afficher_menu():
+<<<<<<< HEAD
     print(""" 
        
                                                 ╻ ╻┏━╸╻  ╻  ┏━┓   ╺┳╸┏━┓   ╻ ╻┏━┓╻ ╻┏━┓   ┏━╸┏━┓┏┳┓┏━╸
@@ -36,6 +41,12 @@ def afficher_menu():
                                                                         ╹ ╹┗━╸╹ ╹┗━┛ 
                                                          """)
     afficher_choix(CHOIX) #OKKKK
+=======
+    print("Hello to your game!")
+    print("Instructions : Choisissez une option du menu.")
+    print("Menu :")
+    afficher_choix(CHOIX)
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
 
 def Sauvegarder_partie_en_cours():
     nom_fichier = input("Entrez le nom du fichier pour sauvegarder la partie en cours : ").strip()
@@ -64,6 +75,7 @@ def Utilisateur():
         return choix_num, nom_utilisateur
     
 def Reponse():
+<<<<<<< HEAD
     reponse = input("""
                     
                                                                         ┏━┓┏━╸┏━┓╺┳┓╻ ╻   ┏━┓
@@ -72,6 +84,11 @@ def Reponse():
                      """).strip().lower()
     if reponse == "oui":
         print("OKAAAAY , Let's Go")
+=======
+    reponse = input("Es-tu prêt à commencer ? Oui ou Non ").strip().lower()
+    if reponse == "oui":
+        print("Super! Commençons le jeu.")
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
     elif reponse == "non":
         print("D'accord, à la prochaine!")
         exit()

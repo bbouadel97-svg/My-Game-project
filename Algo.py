@@ -2,7 +2,11 @@ from pathlib import Path
 from questions_service import load_questions_from_sql
 
 
+<<<<<<< HEAD
 def Quiz():
+=======
+def Quiz_algo():
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
     """Retourne le jeu de questions par défaut (fallback).
 
     Format: dict index-> [question, answer]
@@ -32,7 +36,11 @@ def Quiz():
     return question
 
 
+<<<<<<< HEAD
 def lancer_quiz(score: int, categorie: str = None) -> int:
+=======
+def lancer_quizalgo(score: int, categorie: str = None) -> int:
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
     """Lance le quiz pour la catégorie donnée.
 
     categorie: clé de catégorie telle que renvoyée par `Category()` (ex: '1', '2', ...).
@@ -60,7 +68,11 @@ def lancer_quiz(score: int, categorie: str = None) -> int:
     items = tables.get(table_name)
     if not items:
         # fallback to built-in questions
+<<<<<<< HEAD
         questions = Quiz()
+=======
+        questions = Quiz_algo()
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
     else:
         # Convertir la liste en dictionnaire indexé 1..n similaire à Quiz_algo()
         questions = {i + 1: [q, a] for i, (q, a) in enumerate(items)}
@@ -92,7 +104,11 @@ def boss_themes(played, score=0):
     for boss in boss_list:
         if boss not in played:
             print(f"Vous avez débloqué le boss du thème {boss} ! Préparez-vous pour un défi supplémentaire.")
+<<<<<<< HEAD
             score = lancer_quiz(score, boss)
+=======
+            score = lancer_quizalgo(score, boss)
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
             played.add(boss)
     return score
 

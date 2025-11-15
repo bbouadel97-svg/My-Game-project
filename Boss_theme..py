@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import random
 from typing import List, Tuple
 
@@ -57,3 +58,16 @@ class Boss:
                 random.shuffle(self.questions)
                 continue
             return False, score, last_asked
+=======
+def boss_themes(played):
+    try :   
+        with open("boss_themes.txt", "r", encoding="utf-8") as f:
+            boss_list = f.read().splitlines()
+    except FileNotFoundError:
+        boss_list = []
+    for boss in boss_list:
+        if boss not in played:
+            print(f"Vous avez débloqué le boss du thème {boss} ! Préparez-vous pour un défi supplémentaire.")
+            score = lancer_quizalgo(score, boss)
+            played.add(boss)
+>>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
