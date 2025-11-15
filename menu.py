@@ -13,7 +13,6 @@ def afficher_choix(choix):
         # Affiche le numéro en premier pour que l'utilisateur puisse entrer le chiffre
         print(f"{valeur} : {nom}") 
 def afficher_menu():
-<<<<<<< HEAD
     print(""" 
        
                                                 ╻ ╻┏━╸╻  ╻  ┏━┓   ╺┳╸┏━┓   ╻ ╻┏━┓╻ ╻┏━┓   ┏━╸┏━┓┏┳┓┏━╸
@@ -72,7 +71,6 @@ def Utilisateur():
         return choix_num, nom_utilisateur
     
 def Reponse():
-<<<<<<< HEAD
     reponse = input("""
                     
                                                                         ┏━┓┏━╸┏━┓╺┳┓╻ ╻   ┏━┓
