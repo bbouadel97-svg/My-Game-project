@@ -57,7 +57,7 @@ def Utilisateur():
                 selection = nom
                 break
         if selection is None:
-            print("Option inconnue. Réessayez.")
+            print("Option inconnue. Try again.")
             continue
         nom_utilisateur = input("Quel est ton prénom ? ").strip()
         print(f"Tu as choisi l'option {selection} ({choix_num}).")
