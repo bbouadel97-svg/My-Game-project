@@ -48,12 +48,12 @@ def lancer_boss(session: PlayerSession, session_id: int, categorie: str, score: 
     reponse = input("Votre réponse : ").strip()
     correct = reponse.lower() == reponse_correcte.lower() 
     if correct:
-        print("\nBRAVO ! Vous avez vaincu le BOSS ! +50 points")
-        score += 50
+        print("\nBRAVO ! Vous avez vaincu le BOSS ! +30 points")
+        score += 30
     else:
         print(f"\nDommage ! La réponse était : {reponse_correcte}")
-        print("Le BOSS vous a vaincu. -20 points")
-        score -= 20   
+        print("Le BOSS vous a vaincu. 0 points gagnés.")
+        score += 0
     try:
         session.add_question_to_session_with_category(session_id, None, correct, int(categorie))
     except AttributeError:
