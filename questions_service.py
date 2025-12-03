@@ -1,16 +1,9 @@
-<<<<<<< HEAD
-import sqlite3
-import csv
+import re
+import random
 from pathlib import Path
 from typing import Dict, List, Tuple
-import re
-=======
-import re
-from pathlib import Path
-from typing import Dict, List, Tuple
->>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
 
-
+# Fonction de chargement des questions depuis un fichier SQL
 def load_questions_from_sql(sql_path: Path) -> Dict[str, List[Tuple[str, str]]]:
 	"""Parse un fichier SQL et retourne un mapping table -> list[(question, answer)].
 
@@ -26,7 +19,7 @@ def load_questions_from_sql(sql_path: Path) -> Dict[str, List[Tuple[str, str]]]:
 	insert_re = re.compile(r"INSERT\s+INTO\s+(\w+)\s*\([^)]*\)\s*VALUES\s*(.+?);", re.IGNORECASE | re.DOTALL)
 
 	# Rechercher des tuples de la forme ('question','answer') ou ["question","answer"]
-	tuple_re = re.compile(r"\(?\s*(['\"])(.*?)\1\s*,\s*(['\"])(.*?)\3\s*\)?", re.DOTALL)
+	tuple_re = re.compile(r"\(?\s*(['\"])\s*(.*?)\s*\1\s*,\s*(['\"])\s*(.*?)\s*\3\s*\)?", re.DOTALL)
 
 	result: Dict[str, List[Tuple[str, str]]] = {}
 
@@ -45,87 +38,6 @@ def load_questions_from_sql(sql_path: Path) -> Dict[str, List[Tuple[str, str]]]:
 
 	return result
 
-
-<<<<<<< HEAD
-def load_boss_questions(csv_path: Path | str = "boss_questions.csv") -> List[Tuple[str, str, str]]:
-    """Charge les questions BOSS depuis le fichier CSV.
-    
-    Retourne une liste de tuples (categorie, question, reponse).
-    Les questions BOSS sont plus difficiles et valent plus de points.
-    """
-    csv_path = Path(csv_path)
-    if not csv_path.is_file():
-        # Essayer dans le dossier parent
-        parent_path = csv_path.parent.parent / csv_path.name
-        if parent_path.is_file():
-            csv_path = parent_path
-        else:
-            raise FileNotFoundError(f"Fichier boss_questions.csv introuvable dans {csv_path} ou {parent_path}")
-    
-    questions = []
-    try:
-        with open(csv_path, 'r', encoding='utf-8') as f:
-            reader = csv.reader(f)
-            for row in reader:
-                if len(row) >= 3:
-                    cat_id, question, reponse = row[0], row[1], row[2]
-                    questions.append((cat_id, question, reponse))
-        return questions
-    except Exception as e:
-        print(f"Erreur lors de la lecture des questions BOSS: {e}")
-        return []
-
-def get_boss_question_for_category(category_id: str) -> Tuple[str, str] | None:
-    """Récupère une question BOSS pour la catégorie donnée.
-    
-    Args:
-        category_id: L'ID de la catégorie (1-5)
-    
-    Returns:
-        Un tuple (question, reponse) ou None si pas de question trouvée
-    """
-    try:
-        questions = load_boss_questions()
-        cat_questions = [
-            (q, r) for c, q, r in questions 
-            if c == str(category_id)
-        ]
-        if cat_questions:
-            # Pour l'instant on prend la première question de la catégorie
-            # On pourrait ajouter de l'aléatoire plus tard
-            return cat_questions[0]
-        return None
-    except Exception:
-        return None
-
-if __name__ == "__main__":
-    # Test rapide si on exécute le module directement
-    sql = Path(__file__).parent / 'Script-1.sql'
-    try:
-        print("=== Questions normales ===")
-        data = load_questions_from_sql(sql)
-        for table, items in data.items():
-            print(f"{table}: {len(items)} questions")
-            
-        print("\n=== Questions BOSS ===")
-        boss_questions = load_boss_questions()
-        by_category = {}
-        for cat, q, _ in boss_questions:
-            by_category.setdefault(cat, []).append(q)
-        
-        for cat, questions in by_category.items():
-            print(f"Catégorie {cat}: {len(questions)} question(s) boss")
-            
-        # Test get_boss_question
-        test_cat = "1"
-        q = get_boss_question_for_category(test_cat)
-        if q:
-            print(f"\nQuestion BOSS exemple (cat {test_cat}):")
-            print(f"Q: {q[0]}")
-            print(f"R: {q[1]}")
-    except Exception as e:
-        print("Erreur lors du chargement des questions:", e)
-=======
 if __name__ == "__main__":
 	# Test rapide si on exécute le module directement
 	sql = Path(__file__).parent / 'Project 0' / 'Script-1.sql'
@@ -135,4 +47,33 @@ if __name__ == "__main__":
 			print(f"{table}: {len(items)} questions")
 	except Exception as e:
 		print("Erreur lors du chargement des questions:", e)
->>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
+
+# Fonction pour obtenir une question BOSS aléatoire par catégorie
+def get_boss_question_for_category(categorie: str) -> Tuple[str, str] | None:
+	"""Retourne une question aléatoire (q, a) pour une catégorie donnée.
+
+	Les catégories sont mappées aux tables SQL:
+	'1': quiz_algo, '2': quiz_metiers, '3': quiz_logique,
+	'4': quiz_culture, '5': quiz_anglais
+	"""
+	# IMPORTANT: mapping aligné avec l'ordre affiché dans MAIN2.py
+	# 1: Anglais, 2: Logique, 3: Algorithme, 4: Culture Générale, 5: Métiers
+	cat_map = {
+		'1': 'quiz_anglais',
+		'2': 'quiz_logique',
+		'3': 'quiz_algo',
+		'4': 'quiz_culture',
+		'5': 'quiz_metiers',
+	}
+	try:
+		sql = Path(__file__).parent / 'Project 0' / 'Script-1.sql'
+		tables = load_questions_from_sql(sql)
+		table_name = cat_map.get(str(categorie))
+		if not table_name:
+			return None
+		items = tables.get(table_name) or []
+		if not items:
+			return None
+		return random.choice(items)
+	except Exception:
+		return None

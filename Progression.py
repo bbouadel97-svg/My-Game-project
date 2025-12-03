@@ -63,7 +63,31 @@ def charger_progression(fichier: str = "progression.json") -> dict:
         print("Aucune partie sauvegardée trouvée.")
         return None
 
+#Fonctions de gestion des scores et leaderboard
+def reset_progression(fichier: str = "progression.json") -> bool:
+    """Supprime le fichier de progression ou le réinitialise.
 
+    Retourne True si une progression existante a été supprimée / réinitialisée.
+    """
+    p = Path(fichier)
+    if not p.exists():
+        return False
+    try:
+        # Choix simple: supprimer le fichier; il sera recréé lors de la prochaine sauvegarde
+        p.unlink()
+        print("Progression supprimée (reset).")
+        return True
+    except Exception:
+        # fallback: vider le contenu
+        try:
+            with open(p, "w", encoding="utf-8") as f:
+                f.write("{}")
+            print("Progression réinitialisée (contenu vidé).")
+            return True
+        except Exception:
+            return False
+
+# Fonction de sauvegarde des scores
 def sauvegarder_score(nom: str, score: int, categorie: str, fichier: str = "sauvegarde.json"):
     """Ajoute une entrée (nom, score, categorie, timestamp) à un fichier JSON.
 
@@ -90,7 +114,7 @@ def sauvegarder_score(nom: str, score: int, categorie: str, fichier: str = "sauv
 
     print(f"Score sauvegardé pour {nom} : {score} (catégorie {categorie})")
 
-
+# Fonction de lecture des scores
 def lire_scores(fichier: str = "sauvegarde.json"):
     """Retourne la liste d'entrées sauvegardées (ou [] si fichier absent)."""
     try:
@@ -100,7 +124,7 @@ def lire_scores(fichier: str = "sauvegarde.json"):
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
-
+# Fonction d'affichage du leaderboard
 def afficher_leaderboard(top_n: int = 10, fichier: str = "sauvegarde.json"):
     """Affiche les meilleurs scores triés par score décroissant."""
     scores = lire_scores(fichier)
@@ -126,7 +150,7 @@ def afficher_leaderboard(top_n: int = 10, fichier: str = "sauvegarde.json"):
 import sqlite3
 from pathlib import Path
 
-
+# FONCTIONS DE GESTION DES SCORES AVEC SQLITE
 def init_scores_db(db_path: str = None):
     """Create the scores DB and table if needed. Returns the path used."""
     if db_path is None:
@@ -150,7 +174,7 @@ def init_scores_db(db_path: str = None):
         conn.close()
     return db_path
 
-
+#Fonction de sauvegarde des scores dans la DB
 def sauvegarder_score_db(nom: str, score: int, categorie: str, db_path: str = None):
     """Insert a score into the SQLite DB. Initializes DB if missing."""
     if db_path is None:
@@ -170,7 +194,7 @@ def sauvegarder_score_db(nom: str, score: int, categorie: str, db_path: str = No
     finally:
         conn.close()
 
-
+# Fonction de lecture des scores depuis la DB
 def lire_scores_db(limit: int = 10, db_path: str = None):
     """Return top scores from the DB ordered by score DESC."""
     if db_path is None:
@@ -188,7 +212,7 @@ def lire_scores_db(limit: int = 10, db_path: str = None):
     finally:
         conn.close()
 
-
+# Fonction d'affichage du leaderboard depuis la DB
 def afficher_leaderboard_db(top_n: int = 10, db_path: str = None):
     rows = lire_scores_db(top_n, db_path)
     if not rows:

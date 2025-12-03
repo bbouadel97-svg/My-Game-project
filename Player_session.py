@@ -49,7 +49,7 @@ class PlayerSession:
                 except sqlite3.OperationalError:
                     # si la colonne existe déjà ou si l'alter échoue, ignorer
                     pass
-
+    # Fonction de création d'un nouveau joueur
     def create_player(self, nom: str) -> str:
         with sqlite3.connect(self.db_path) as conn:
             try:
@@ -57,13 +57,13 @@ class PlayerSession:
                 cursor.execute("SELECT player_name FROM player WHERE player_name = ?", (nom,))
                 if cursor.fetchone():
                     return f"Bon retour {nom} !"
-                
+              
                 cursor.execute("INSERT INTO player (player_name, player_score) VALUES (?, 0)", (nom,))
                 conn.commit()
                 return f"Nouveau joueur {nom} créé !"
             except sqlite3.Error as e:
                 return f"Erreur lors de la création du joueur : {e}"
-
+    # Fonction de mise à jour du score du joueur
     def update_player_score(self, nom: str, nouveau_score: int) -> None:
         # Met à jour le meilleur score du joueur si le nouveau score est supérieur
         with sqlite3.connect(self.db_path) as conn:
@@ -76,7 +76,7 @@ class PlayerSession:
             if nouveau_score > best:
                 cur.execute("UPDATE player SET player_score = ? WHERE player_name = ?", (nouveau_score, nom))
                 conn.commit()
-
+    # Fonction de création d'une nouvelle session de jeu
     def create_game_session(self, nom: str) -> int:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -91,7 +91,7 @@ class PlayerSession:
             """, (player_id[0], datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
             conn.commit()
             return cursor.lastrowid
-
+    #Fonction d'ajout d'une question répondue à une session
     def add_question_to_session(self, session_id: int, question_id: int, correct: bool) -> None:
         # Backwards-compatible: question_id can be None; category can be provided
         with sqlite3.connect(self.db_path) as conn:
@@ -100,7 +100,7 @@ class PlayerSession:
                 VALUES (?, ?, NULL, ?)
             """, (session_id, question_id, 1 if correct else 0))
             conn.commit()
-
+    # Fonction d'ajout d'une question répondue avec catégorie à une session
     def add_question_to_session_with_category(self, session_id: int, question_id: int, correct: bool, category_id: int = None) -> None:
         """Enregistre une question répondue et la catégorie associée (optionnel)."""
         with sqlite3.connect(self.db_path) as conn:
@@ -109,7 +109,7 @@ class PlayerSession:
                 VALUES (?, ?, ?, ?)
             """, (session_id, question_id, category_id, 1 if correct else 0))
             conn.commit()
-
+    # Fonction d'ajout d'une catégorie jouée à une session
     def add_category_to_session(self, session_id: int, category_id: int) -> None:
         """Enregistre qu'une catégorie a été jouée dans la session."""
         with sqlite3.connect(self.db_path) as conn:
@@ -118,13 +118,13 @@ class PlayerSession:
                 VALUES (?, ?)
             """, (session_id, category_id))
             conn.commit()
-
+    # Fonction de mise à jour du score final d'une session
     def update_game_session_score(self, session_id: int, score: int) -> None:
         """Met à jour le score final d'une session de jeu."""
         with sqlite3.connect(self.db_path) as conn:
             conn.execute("UPDATE game_session SET score = ? WHERE id_session = ?", (score, session_id))
             conn.commit()
-
+    # Fonction de récupération de l'historique des sessions d'un joueur
     def get_player_history(self, nom: str) -> List[Dict]:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -154,3 +154,31 @@ class PlayerSession:
                     "accuracy": (correct_q / total_q * 100) if total_q > 0 else 0
                 })
             return sessions
+    # Fonction de réinitialisation des sessions d'un joueur
+    def reset_player_sessions(self, nom: str) -> bool:
+        """Supprime toutes les sessions et traces (questions, catégories) pour un joueur.
+
+        Retourne True si des lignes ont été affectées.
+        """
+        with sqlite3.connect(self.db_path) as conn:
+            cur = conn.cursor()
+            # Récupérer l'id du joueur
+            cur.execute("SELECT id_player FROM player WHERE player_name = ?", (nom,))
+            row = cur.fetchone()
+            if not row:
+                return False
+            id_player = row[0]
+
+            # Récupérer les sessions du joueur
+            cur.execute("SELECT id_session FROM game_session WHERE id_player = ?", (id_player,))
+            sessions = [r[0] for r in cur.fetchall()]
+            if not sessions:
+                return False
+
+            # Supprimer les données liées puis les sessions
+            q_marks = ",".join(["?"] * len(sessions))
+            cur.execute(f"DELETE FROM session_questions WHERE id_session IN ({q_marks})", sessions)
+            cur.execute(f"DELETE FROM session_categories WHERE id_session IN ({q_marks})", sessions)
+            cur.execute(f"DELETE FROM game_session WHERE id_session IN ({q_marks})", sessions)
+            conn.commit()
+            return True
