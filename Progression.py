@@ -9,7 +9,7 @@ def sauvegarder_partie(etat, fichier="sauvegarde.json"):
     with open(fichier, "w", encoding="utf-8") as f:
         json.dump(etat, f, indent=4)
 
-
+# Fonction de gestion de la progression
 def sauvegarder_progression(nom: str, score: int, categories_jouees: list, bosses_defeated: dict = None, final_unlocked: bool = False, last_boss_questions: list = None, fichier: str = "progression.json"):
     """Sauvegarde l'état courant d'une campagne.
 
@@ -34,6 +34,7 @@ def sauvegarder_progression(nom: str, score: int, categories_jouees: list, bosse
         json.dump(etat, f, ensure_ascii=False, indent=4)
     print(f"Progression sauvegardée pour {nom} (score: {score})")
 
+# Fonction de chargement de la progression
 
 def charger_progression(fichier: str = "progression.json") -> dict:
     """Charge la progression d'une campagne. Retourne None si pas de sauvegarde valide."""
@@ -63,7 +64,7 @@ def charger_progression(fichier: str = "progression.json") -> dict:
         print("Aucune partie sauvegardée trouvée.")
         return None
 
-#Fonctions de gestion des scores et leaderboard
+#Fonctions de gestion des progressions
 def reset_progression(fichier: str = "progression.json") -> bool:
     """Supprime le fichier de progression ou le réinitialise.
 
@@ -114,7 +115,7 @@ def sauvegarder_score(nom: str, score: int, categorie: str, fichier: str = "sauv
 
     print(f"Score sauvegardé pour {nom} : {score} (catégorie {categorie})")
 
-# Fonction de lecture des scores
+# Fonction de lecture des scores et affichage
 def lire_scores(fichier: str = "sauvegarde.json"):
     """Retourne la liste d'entrées sauvegardées (ou [] si fichier absent)."""
     try:
@@ -124,7 +125,7 @@ def lire_scores(fichier: str = "sauvegarde.json"):
     except (FileNotFoundError, json.JSONDecodeError):
         return []
 
-# Fonction d'affichage du leaderboard
+# Fonction d'affichage du leaderboard et des scores
 def afficher_leaderboard(top_n: int = 10, fichier: str = "sauvegarde.json"):
     """Affiche les meilleurs scores triés par score décroissant."""
     scores = lire_scores(fichier)
@@ -174,7 +175,8 @@ def init_scores_db(db_path: str = None):
         conn.close()
     return db_path
 
-#Fonction de sauvegarde des scores dans la DB
+#Fonction de sauvegarde des scores dans la base de données
+
 def sauvegarder_score_db(nom: str, score: int, categorie: str, db_path: str = None):
     """Insert a score into the SQLite DB. Initializes DB if missing."""
     if db_path is None:
@@ -194,7 +196,8 @@ def sauvegarder_score_db(nom: str, score: int, categorie: str, db_path: str = No
     finally:
         conn.close()
 
-# Fonction de lecture des scores depuis la DB
+# Fonction de lecture des scores depuis la base de données
+
 def lire_scores_db(limit: int = 10, db_path: str = None):
     """Return top scores from the DB ordered by score DESC."""
     if db_path is None:
@@ -212,7 +215,8 @@ def lire_scores_db(limit: int = 10, db_path: str = None):
     finally:
         conn.close()
 
-# Fonction d'affichage du leaderboard depuis la DB
+# Fonction d'affichage du leaderboard depuis la base de données
+
 def afficher_leaderboard_db(top_n: int = 10, db_path: str = None):
     rows = lire_scores_db(top_n, db_path)
     if not rows:

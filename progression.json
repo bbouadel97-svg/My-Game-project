@@ -1,34 +1,11 @@
 {
-<<<<<<< HEAD
-    "nom": "Othmane",
-    "score": 45,
+    "nom": "Samad",
+    "score": 110,
     "categories_jouees": [
         "1"
     ],
     "bosses_defeated": {},
     "final_unlocked": false,
     "last_boss_questions": null,
-    "timestamp": 1762452510
-=======
-    "nom": "othb",
-    "score": 21,
-    "categories_jouees": [
-        "5"
-    ],
-    "bosses_defeated": {
-        "1": false,
-        "2": false,
-        "3": false,
-        "4": false,
-        "5": true
-    },
-    "final_unlocked": false,
-    "last_boss_questions": [
-        [
-            "Comment dit-on \"Je veux un café\" en anglais ?",
-            "I want a coffee."
-        ]
-    ],
-    "timestamp": 1762076463
->>>>>>> 202519cb70301fd2b1da6150c2a7841ab7124c92
+    "timestamp": 1764872807
 }

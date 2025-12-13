@@ -1,88 +1,87 @@
--- Table for players-- Table for players
+-- pour les joueurs
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[player]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE player (
+        id_player INT PRIMARY KEY IDENTITY(1,1),
+        player_name NVARCHAR(255) NOT NULL UNIQUE,
+        player_score INT DEFAULT 0
+    );
+END
+GO
 
-CREATE TABLE IF NOT EXISTS player (CREATE TABLE IF NOT EXISTS player (
+-- pour les catégories de questions
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[category]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE category (
+        id INT PRIMARY KEY IDENTITY(1,1),
+        name_category NVARCHAR(255) NOT NULL
+    );
+END
+GO
 
-    id_player INTEGER PRIMARY KEY AUTOINCREMENT,    id_player INTEGER PRIMARY KEY AUTOINCREMENT,
+-- pour les questions
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[questions]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE questions (
+        id INT PRIMARY KEY IDENTITY(1,1),
+        question NVARCHAR(MAX) NOT NULL,
+        reponse NVARCHAR(MAX) NOT NULL,
+        id_category INT,
+        is_boss BIT DEFAULT 0,
+        FOREIGN KEY (id_category) REFERENCES category(id)
+    );
+END
+GO
 
-    player_name TEXT NOT NULL UNIQUE,    player_name TEXT NOT NULL UNIQUE,
+-- Pour les sessions de jeu
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[game_session]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE game_session (
+        id_session INT PRIMARY KEY IDENTITY(1,1),
+        id_player INT,
+        score INT DEFAULT 0,
+        date_played DATETIME DEFAULT GETDATE(),
+        FOREIGN KEY (id_player) REFERENCES player(id_player)
+    );
+END
+GO
 
-    player_score INTEGER DEFAULT 0    player_score INTEGER DEFAULT 0
-
-););
-
-
-
--- Table for categories-- Table for categories
-
-CREATE TABLE IF NOT EXISTS category (CREATE TABLE IF NOT EXISTS category (
-
-    id INTEGER PRIMARY KEY AUTOINCREMENT,    id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-    name_category TEXT NOT NULL    name_category TEXT NOT NULL
-
-););
-
-
-
--- Table for questions-- Table for questions
-
-CREATE TABLE IF NOT EXISTS questions (CREATE TABLE IF NOT EXISTS questions (
-
-    id INTEGER PRIMARY KEY AUTOINCREMENT,    id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-    question TEXT NOT NULL,    question TEXT NOT NULL,
-
-    reponse TEXT NOT NULL,    reponse TEXT NOT NULL,
-
-    id_category INTEGER,    id_category INTEGER,
-
-    is_boss BOOLEAN DEFAULT 0,    FOREIGN KEY (id_category) REFERENCES category(id)
-
-    FOREIGN KEY (id_category) REFERENCES category(id));
-
-);
-
--- Table for game sessions
-
--- Table for game sessionsCREATE TABLE IF NOT EXISTS game_session (
-
-CREATE TABLE IF NOT EXISTS game_session (    id_session INTEGER PRIMARY KEY AUTOINCREMENT,
-
-    id_session INTEGER PRIMARY KEY AUTOINCREMENT,    id_player INTEGER,
-
-    id_player INTEGER,    score INTEGER DEFAULT 0,
-
-    score INTEGER DEFAULT 0,    date_played DATETIME DEFAULT CURRENT_TIMESTAMP,
-
-    date_played DATETIME DEFAULT CURRENT_TIMESTAMP,    FOREIGN KEY (id_player) REFERENCES player(id_player)
-
-    FOREIGN KEY (id_player) REFERENCES player(id_player));
-
-);
-
--- Table linking sessions and questions
-
--- Table linking sessions and questionsCREATE TABLE IF NOT EXISTS session_questions (
-
-CREATE TABLE IF NOT EXISTS session_questions (    id_session INTEGER,
-
-    id_session INTEGER,    id_question INTEGER,
-
-    id_question INTEGER,    answered_correctly INTEGER,
-
-    answered_correctly INTEGER,    FOREIGN KEY (id_session) REFERENCES game_session(id_session),
-
-    FOREIGN KEY (id_session) REFERENCES game_session(id_session),    FOREIGN KEY (id_question) REFERENCES questions(id)
-
-    FOREIGN KEY (id_question) REFERENCES questions(id));
-
-);
-
+-- Pour joindre les sessions de jeu et les questions posées
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[session_questions]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE session_questions (
+        id_session INT,
+        id_question INT,
+        answered_correctly INT,
+        FOREIGN KEY (id_session) REFERENCES game_session(id_session),
+        FOREIGN KEY (id_question) REFERENCES questions(id)
+    );
+END
+GO
 
 -- Initial categories
-INSERT OR IGNORE INTO category (id, name_category) VALUES
-    (1, 'Anglais'),
-    (2, 'Logique'),
-    (3, 'Algorithme'),
-    (4, 'Culture Générale'),
-    (5, 'Métiers de l''informatique');
+IF NOT EXISTS (SELECT * FROM category WHERE id = 1)
+BEGIN
+    INSERT INTO category (name_category) VALUES ('Anglais');
+END
+
+IF NOT EXISTS (SELECT * FROM category WHERE id = 2)
+BEGIN
+    INSERT INTO category (name_category) VALUES ('Logique');
+END
+
+IF NOT EXISTS (SELECT * FROM category WHERE id = 3)
+BEGIN
+    INSERT INTO category (name_category) VALUES ('Algorithme');
+END
+
+IF NOT EXISTS (SELECT * FROM category WHERE id = 4)
+BEGIN
+    INSERT INTO category (name_category) VALUES ('Culture Générale');
+END
+
+IF NOT EXISTS (SELECT * FROM category WHERE id = 5)
+BEGIN
+    INSERT INTO category (name_category) VALUES ('Métiers de l''informatique');
+END
+GO

@@ -11,7 +11,7 @@ from Progression import (
     reset_progression,
 )
 
-def charger_questions_csv(fichier_csv):
+def charger_questions_csv(fichier_csv): #recupère les questions du fichier Questions.csv selon choix joueur
     categories = {
         "1": "Anglais",
         "2": "Logique",
@@ -19,7 +19,7 @@ def charger_questions_csv(fichier_csv):
         "4": "Culture Générale",
         "5": "Métiers de l''informatique"
     }
-    
+ 
     questions_par_categorie = {cat_id: [] for cat_id in categories}
     
     try:
@@ -36,7 +36,7 @@ def charger_questions_csv(fichier_csv):
         return {}, {}
 
 def lancer_boss(session: PlayerSession, session_id: int, categorie: str, score: int = 0) -> tuple[bool, int]:
-    boss_q = get_boss_question_for_category(categorie)
+    boss_q = get_boss_question_for_category(categorie) # Récupère la question BOSS selon la catégorie
     if not boss_q:
         print("Pas de question BOSS disponible pour cette catégorie.")
         return False, score
@@ -54,6 +54,8 @@ def lancer_boss(session: PlayerSession, session_id: int, categorie: str, score: 
         print(f"\nDommage ! La réponse était : {reponse_correcte}")
         print("Le BOSS vous a vaincu. 0 points gagnés.")
         score += 0
+    input("\nAppuyez sur Entrée pour continuer...")
+    
     try:
         session.add_question_to_session_with_category(session_id, None, correct, int(categorie))
     except AttributeError:
@@ -69,7 +71,7 @@ def lancer_quiz(session: PlayerSession, session_id: int, questions, categorie: s
         print("Pas de questions disponibles pour cette catégorie.")
         return score
     if max_questions is None:
-        max_questions = min(20, len(questions))
+        max_questions = min(20, len(questions)) # Utiliser 20 questions ou le maximum disponible
 
     for i, (question, reponse_correcte) in enumerate(questions):
         if i >= max_questions:
@@ -85,7 +87,9 @@ def lancer_quiz(session: PlayerSession, session_id: int, questions, categorie: s
                 score += 10
             else:
                 print(f"Incorrect. La réponse était : {reponse_correcte}")
-                score += 0
+                score += 0           
+            print(f"Score actuel : {score}")
+            input("\nAppuyez sur Entrée pour continuer...")
             try:
                 session.add_question_to_session_with_category(session_id, i + 1, correct, int(categorie))
             except AttributeError:
@@ -93,13 +97,11 @@ def lancer_quiz(session: PlayerSession, session_id: int, questions, categorie: s
         except EOFError:
             print("Réponse non fournie, question passée.")
             score += 0
-        
-        print(f"Score actuel : {score}")
 
     return score
-def afficher_statistiques(session: PlayerSession, nom_utilisateur: str):
+def afficher_statistiques(session: PlayerSession, nom_utilisateur: str): #fontion pour afficher les statistiques du joueur
     """Affiche les statistiques du joueur."""
-    historique = session.get_player_history(nom_utilisateur)
+    historique = session.get_player_history(nom_utilisateur) # Récupère l'historique des parties du joueur
     if not historique:
         print("Aucune partie jouée.")
         return
@@ -117,7 +119,7 @@ def afficher_statistiques(session: PlayerSession, nom_utilisateur: str):
     print(f"Bonnes réponses : {derniere_session['correct_answers']}")
     print(f"Précision : {derniere_session['accuracy']:.1f}%")
 
-def run():
+def run(): #fonction principale qui lance le jeu
     script_dir = Path(os.path.dirname(os.path.realpath(__file__)))
     csv_path = script_dir / "QUESTIONS.CSV"
     session_manager = PlayerSession()   
@@ -125,7 +127,7 @@ def run():
     if not questions_par_cat:
         print("Erreur: Impossible de charger les questions.")
         return    
-    afficher_menu()
+    afficher_menu() #affiche le menu principal et récupère le choix utilisateur
     user_info = Utilisateur()
     if isinstance(user_info, tuple) and len(user_info) == 2:
         choix_menu, nom_utilisateur = user_info
@@ -203,6 +205,7 @@ def run():
             session_manager.update_game_session_score(session_id, score)
         except AttributeError:
             pass
+        
         session_manager.update_player_score(nom_utilisateur, score)
         
         continuer = input("\nVoulez-vous continuer vers une autre catégorie ? (oui/non) : ").strip().lower()
@@ -217,4 +220,4 @@ def run():
     print(f"Au revoir {nom_utilisateur}, à bientôt !")
 
 if __name__ == "__main__":
-    run()
+    run() #lance le jeu

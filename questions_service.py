@@ -3,8 +3,9 @@ import random
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-# Fonction de chargement des questions depuis un fichier SQL
-def load_questions_from_sql(sql_path: Path) -> Dict[str, List[Tuple[str, str]]]:
+# Fonction de chargement des questions depuis un fichier SQL SCRIPT là ou se trouvent les questions
+
+def load_questions_from_sql(sql_path: Path) -> Dict[str, List[Tuple[str, str]]]: 
 	"""Parse un fichier SQL et retourne un mapping table -> list[(question, answer)].
 
 	Le parser est simple et cible les INSERT INTO statements présents dans
@@ -49,6 +50,7 @@ if __name__ == "__main__":
 		print("Erreur lors du chargement des questions:", e)
 
 # Fonction pour obtenir une question BOSS aléatoire par catégorie
+
 def get_boss_question_for_category(categorie: str) -> Tuple[str, str] | None:
 	"""Retourne une question aléatoire (q, a) pour une catégorie donnée.
 
@@ -56,7 +58,7 @@ def get_boss_question_for_category(categorie: str) -> Tuple[str, str] | None:
 	'1': quiz_algo, '2': quiz_metiers, '3': quiz_logique,
 	'4': quiz_culture, '5': quiz_anglais
 	"""
-	# IMPORTANT: mapping aligné avec l'ordre affiché dans MAIN2.py
+	# Catégorie mapping:
 	# 1: Anglais, 2: Logique, 3: Algorithme, 4: Culture Générale, 5: Métiers
 	cat_map = {
 		'1': 'quiz_anglais',
