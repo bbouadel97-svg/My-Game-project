@@ -19,7 +19,7 @@ def sauvegarder_progression(nom: str, score: int, categories_jouees: list, bosse
     - bosses_defeated: dict mapping key->bool indiquant si boss a été vaincu
     - final_unlocked: bool indiquant si le boss final est débloqué
     """
-    if bosses_defeated is None:
+    if bosses_defeated is None: #pour éviter la mutabilité par défaut
         bosses_defeated = {}
     etat = {
         "nom": nom,
@@ -30,32 +30,32 @@ def sauvegarder_progression(nom: str, score: int, categories_jouees: list, bosse
         "last_boss_questions": last_boss_questions,
         "timestamp": int(time.time()),
     }
-    with open(fichier, "w", encoding="utf-8") as f:
+    with open(fichier, "w", encoding="utf-8") as f: 
         json.dump(etat, f, ensure_ascii=False, indent=4)
-    print(f"Progression sauvegardée pour {nom} (score: {score})")
+    print(f"Progression sauvegardée pour {nom} (score: {score})") #pour indiquer que la sauvegarde a eu lieu
 
 # Fonction de chargement de la progression
 
-def charger_progression(fichier: str = "progression.json") -> dict:
+def charger_progression(fichier: str = "progression.json") -> dict: #pour charger la progression
     """Charge la progression d'une campagne. Retourne None si pas de sauvegarde valide."""
     try:
         with open(fichier, "r", encoding="utf-8") as f:
             etat = json.load(f)
             if not isinstance(etat, dict):
                 return None
-            # Normalize fields and provide defaults
+            # normaliser les clés attendues
             etat.setdefault("score", 0)
             etat.setdefault("nom", "Anonyme")
             etat.setdefault("categories_jouees", [])
             etat.setdefault("bosses_defeated", {})
             etat.setdefault("final_unlocked", False)
-            # Convert categories_jouees to a set for caller convenience
-            etat["categories_jouees"] = set(str(c) for c in etat.get("categories_jouees", []))
+            # convertir categories_jouees en set de chaînes
+            etat["categories_jouees"] = set(str(c) for c in etat.get("categories_jouees", [])) #état des catégories jouées
             # Ensure bosses_defeated keys are strings
-            etat["bosses_defeated"] = {str(k): bool(v) for k, v in etat.get("bosses_defeated", {}).items()}
+            etat["bosses_defeated"] = {str(k): bool(v) for k, v in etat.get("bosses_defeated", {}).items()} #état des boss vaincus
             ts = etat.get("timestamp")
             if ts:
-                dt = datetime.fromtimestamp(ts)
+                dt = datetime.fromtimestamp(ts) #pour afficher la date de la sauvegarde
                 print(f"Partie trouvée pour {etat['nom']} du {dt:%Y-%m-%d %H:%M}")
             else:
                 print(f"Partie trouvée pour {etat['nom']}")
@@ -74,7 +74,7 @@ def reset_progression(fichier: str = "progression.json") -> bool:
     if not p.exists():
         return False
     try:
-        # Choix simple: supprimer le fichier; il sera recréé lors de la prochaine sauvegarde
+        # supprimer le fichier directement
         p.unlink()
         print("Progression supprimée (reset).")
         return True
@@ -145,20 +145,18 @@ def afficher_leaderboard(top_n: int = 10, fichier: str = "sauvegarde.json"):
         from datetime import datetime
         dt = datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S') if ts else 'N/A'
         print(f"{i}. {nom} — {score} pts — cat {categorie} — {dt}")
+### SQLITE GESTION DES SCORES ###
 
-
-### SQLite helpers (migration) ###
 import sqlite3
 from pathlib import Path
-
 # FONCTIONS DE GESTION DES SCORES AVEC SQLITE
-def init_scores_db(db_path: str = None):
+def init_scores_db(db_path: str = None): #POUR INITIALISER LA BASE DE DONNÉES
     """Create the scores DB and table if needed. Returns the path used."""
     if db_path is None:
         db_path = str(Path(__file__).parent / 'sauvegarde.db')
     conn = sqlite3.connect(db_path)
     try:
-        cur = conn.cursor()
+        cur = conn.cursor() #POUR CRÉER LA TABLE SI ELLE N'EXISTE PAS
         cur.execute(
             """
             CREATE TABLE IF NOT EXISTS scores (
@@ -174,9 +172,7 @@ def init_scores_db(db_path: str = None):
     finally:
         conn.close()
     return db_path
-
 #Fonction de sauvegarde des scores dans la base de données
-
 def sauvegarder_score_db(nom: str, score: int, categorie: str, db_path: str = None):
     """Insert a score into the SQLite DB. Initializes DB if missing."""
     if db_path is None:
@@ -195,9 +191,7 @@ def sauvegarder_score_db(nom: str, score: int, categorie: str, db_path: str = No
         conn.commit()
     finally:
         conn.close()
-
 # Fonction de lecture des scores depuis la base de données
-
 def lire_scores_db(limit: int = 10, db_path: str = None):
     """Return top scores from the DB ordered by score DESC."""
     if db_path is None:
@@ -214,9 +208,7 @@ def lire_scores_db(limit: int = 10, db_path: str = None):
         ]
     finally:
         conn.close()
-
 # Fonction d'affichage du leaderboard depuis la base de données
-
 def afficher_leaderboard_db(top_n: int = 10, db_path: str = None):
     rows = lire_scores_db(top_n, db_path)
     if not rows:

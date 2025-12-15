@@ -3,7 +3,7 @@ import random
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-# Fonction de chargement des questions depuis un fichier SQL SCRIPT là ou se trouvent les questions
+# Fonction de chargement des questions depuis un fichier SQL SCRIPT là ou se trouvent les questions // Vérification et extraction des questions et réponses
 
 def load_questions_from_sql(sql_path: Path) -> Dict[str, List[Tuple[str, str]]]: 
 	"""Parse un fichier SQL et retourne un mapping table -> list[(question, answer)].

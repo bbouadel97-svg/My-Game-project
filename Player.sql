@@ -1,3 +1,4 @@
+--- création des tables dans la base de données SQL Server
 -- pour les joueurs
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[player]') AND type in (N'U'))
 BEGIN
@@ -59,7 +60,7 @@ BEGIN
 END
 GO
 
--- Initial categories
+-- Initial categories insertion
 IF NOT EXISTS (SELECT * FROM category WHERE id = 1)
 BEGIN
     INSERT INTO category (name_category) VALUES ('Anglais');
